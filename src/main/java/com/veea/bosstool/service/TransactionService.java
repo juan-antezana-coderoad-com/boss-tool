@@ -5,6 +5,9 @@ import com.veea.bosstool.model.transactionLog.TransactionLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.veea.bosstool.util.AppConstants.Kafka.TRANSACTION_TOPIC_NAME;
 
 @Service
@@ -28,5 +31,10 @@ public class TransactionService {
         kafkaMessage.setTopic(TRANSACTION_TOPIC_NAME);
         kafkaMessage.setMessage(new String(bytes));
         return kafkaMessage;
+    }
+
+    public List<KafkaMessage> sendAndGetKafkaMessages(final List<TransactionLog> transactionLogs) {
+        List<KafkaMessage> kafkaMessages = transactionLogs.stream().map(this::sendAndGetKafkaMessage).collect(Collectors.toList());
+        return kafkaMessages;
     }
 }

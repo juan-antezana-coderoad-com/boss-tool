@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class TransactionController {
@@ -23,17 +22,17 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/transactions/bulk/publish")
-    @ResponseStatus(code = HttpStatus.OK)
-    public List<KafkaMessage> bulkPublish(@RequestBody List<TransactionLog> transactionLogs) throws Exception {
-        List<KafkaMessage> kafkaMessages = transactionLogs.stream().map(transactionService::sendAndGetKafkaMessage).collect(Collectors.toList());
-        return kafkaMessages;
-    }
-
     @PostMapping("/transactions/publish")
     @ResponseStatus(code = HttpStatus.OK)
     public KafkaMessage publish(@RequestBody TransactionLog transactionLog) throws Exception {
         KafkaMessage kafkaMessage = this.transactionService.sendAndGetKafkaMessage(transactionLog);
         return kafkaMessage;
+    }
+
+    @PostMapping("/transactions/bulk/publish")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<KafkaMessage> bulkPublish(@RequestBody List<TransactionLog> transactionLogs) throws Exception {
+        List<KafkaMessage> kafkaMessages = this.transactionService.sendAndGetKafkaMessages(transactionLogs);
+        return kafkaMessages;
     }
 }
