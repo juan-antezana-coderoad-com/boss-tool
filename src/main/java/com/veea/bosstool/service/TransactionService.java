@@ -13,11 +13,11 @@ import static com.veea.bosstool.util.AppConstants.Kafka.TRANSACTION_TOPIC_NAME;
 @Service
 public class TransactionService {
 
-    private KafkaProducer kafkaProducer;
+    private KafkaService kafkaProducer;
     private JsonMessageToBytesGenericProvider<TransactionLog> messageBytesProvider;
 
     @Autowired
-    public TransactionService(KafkaProducer kafkaProducer) {
+    public TransactionService(KafkaService kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
         this.messageBytesProvider = new JsonMessageToBytesGenericProvider<>(TransactionLog.class);
     }
